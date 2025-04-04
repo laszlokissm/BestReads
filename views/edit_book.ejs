@@ -1,25 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Book</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="mybooks.html">My Books</a></li>
-                <li class="nav-item"><a class="nav-link" href="browse.html">Browse</a></li>
-                <li class="nav-item"><a class="nav-link" href="manage_books.html">Manage books</a></li>
-                <li class="nav-item"><a class="nav-link" href="manage_users.html">Manage users</a></li>
-            </ul>
-            <div class="navbar-nav">
-                <a class="nav-link" href="#">Profile</a>
-            </div>
-        </nav>
-    </header>
+<%- include('header') %>
+
     <main class="container mt-4">
         <h1>Edit Book</h1>
         <form>
@@ -46,5 +26,4 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </main>
-</body>
-</html>
+<%- include('footer')%>

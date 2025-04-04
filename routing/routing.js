@@ -17,21 +17,21 @@ const deleteUserMW = require('../middlewares/deleteUserMW');
 
 function subscibeToRoutes(app) {
     const objRepo = {};
-    app.get('/', loadBooksMW(objRepo), renderMW(objRepo));
-    app.get('/book/new', authMW(objRepo), renderMW(objRepo));
+    app.get('/', loadBooksMW(objRepo), renderMW(objRepo,'index'));
+    app.get('/book/new', authMW(objRepo), renderMW(objRepo,'edit_book'));
     app.post('/book/new', authMW(objRepo), saveBookMW(objRepo));
     app.get('/book/edit/:bookid', authMW(objRepo), loadBookMW(objRepo), renderMW(objRepo,'edit_book'));
     app.post('/book/edit/:bookid', authMW(objRepo), saveBookMW(objRepo));
     app.get('/book/del/:bookid', authMW(objRepo), loadBookMW(objRepo), deleteBookMW(objRepo));
 
-    app.get('/users', loadUsersMW(objRepo), renderMW(objRepo));
+    app.get('/users', loadUsersMW(objRepo), renderMW(objRepo,'manage_users'));
     app.get('/user/new', authMW(objRepo), renderMW(objRepo,'add_user'));
     app.post('/user/new', authMW(objRepo), saveUserMW(objRepo));
-    app.get('/user/edit/:userid', authMW(objRepo), loadUserMW(objRepo), renderMW(objRepo));
+    app.get('/user/edit/:userid', authMW(objRepo), loadUserMW(objRepo), renderMW(objRepo,'add_user'));
     app.post('/user/edit/:userid', authMW(objRepo), saveUserMW(objRepo));
     app.get('/user/del/:userid', authMW(objRepo), loadUserMW(objRepo), deleteUserMW(objRepo));
 
-    app.get('/login', renderMW(objRepo));
+    app.get('/login', renderMW(objRepo,'login'));
     app.post('/login', loginMW(objRepo));
     app.get('/logout', logoutMW(objRepo));
 }
