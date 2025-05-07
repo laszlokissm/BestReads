@@ -12,19 +12,25 @@
             </div>
             <div class="col-md-9">
                 <div class="book-list">
-                    <div class="book-item d-flex justify-content-between align-items-center border p-2 mb-2">
-                        <div>
-                            <h5>Title</h5>
-                            <p>Author</p>
-                            <p>My rating</p>
+                    <% if (typeof books !== 'undefined' && books.length > 0) { %>
+                        <% books.forEach(book => { %>
+                        <div class="book-item d-flex justify-content-between align-items-center border p-2 mb-2">
+                            <div>
+                                <h5><%= book.title %></h5>
+                                <p><%= book.author %></p>
+                                <p>My rating</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-secondary">Add tag</button>
+                                <button class="btn btn-sm btn-warning">Rate</button>
+                                <button class="btn btn-sm btn-info">Review</button>
+                                <button class="btn btn-sm btn-danger">Remove</button>
+                            </div>
                         </div>
-                        <div>
-                            <button class="btn btn-sm btn-secondary">Add tag</button>
-                            <button class="btn btn-sm btn-warning">Rate</button>
-                            <button class="btn btn-sm btn-info">Review</button>
-                            <button class="btn btn-sm btn-danger">Remove</button>
-                        </div>
-                    </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="alert alert-info">No books found.</div>
+                    <% } %>
                 </div>
             </div>
         </div>

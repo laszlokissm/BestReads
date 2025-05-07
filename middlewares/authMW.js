@@ -4,7 +4,13 @@
  * @param {object} objRepo
  */
 module.exports = (objRepo) => {
-    return (res, req, next) => {
-        next();
+    return (req, res, next) => {
+        return next();
+        // TODO admin / user
+        /* 
+        if (req.session.loggedIn === true) {
+            return res.redirect('/login');
+        }
+        */
     }
 }

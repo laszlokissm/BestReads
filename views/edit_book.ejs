@@ -1,29 +1,30 @@
 <%- include('header') %>
 
     <main class="container mt-4">
-        <h1>Edit Book</h1>
-        <form>
+        <h1><%= typeof book !== 'undefined' ? 'Edit Book' : 'Add New Book' %></h1>
+        <form action="<%= typeof book !== 'undefined' ? `/book/edit/${book._id}` : '/book/new' %>" method="POST">
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" name="title">
+                <input type="text" class="form-control" id="title" name="title" value="<%= typeof book !== 'undefined' ? book.title : '' %>" required>
             </div>
             <div class="form-group">
                 <label for="author">Author</label>
-                <input type="text" class="form-control" id="author" name="author">
+                <input type="text" class="form-control" id="author" name="author" value="<%= typeof book !== 'undefined' ? book.author : '' %>" required>
             </div>
             <div class="form-group">
-                <label for="releaseDate">Release Date</label>
-                <input type="date" class="form-control" id="releaseDate" name="releaseDate">
+                <label for="ReleaseDate">Release Date</label>
+                <input type="date" class="form-control" id="ReleaseDate" name="ReleaseDate" value="<%= typeof book !== 'undefined' && book.ReleaseDate ? book.ReleaseDate.toISOString().split('T')[0] : '' %>">
             </div>
             <div class="form-group">
-                <label for="pageCount">Page Count</label>
-                <input type="number" class="form-control" id="pageCount" name="pageCount">
+                <label for="PageCount">Page Count</label>
+                <input type="number" class="form-control" id="PageCount" name="PageCount" value="<%= typeof book !== 'undefined' ? book.PageCount : '' %>">
             </div>
             <div class="form-group">
-                <label for="wordCount">Word Count</label>
-                <input type="number" class="form-control" id="wordCount" name="wordCount">
+                <label for="WordCount">Word Count</label>
+                <input type="number" class="form-control" id="WordCount" name="WordCount" value="<%= typeof book !== 'undefined' ? book.WordCount : '' %>">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary"><%= typeof book !== 'undefined' ? 'Update Book' : 'Add Book' %></button>
+            <a href="/manage_books" class="btn btn-secondary">Cancel</a>
         </form>
     </main>
 <%- include('footer')%>

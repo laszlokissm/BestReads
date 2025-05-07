@@ -2,6 +2,10 @@ const express = require('express');
 
 const app = express();
 
+// Add body-parser middleware for parsing form data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.set('view engine', 'ejs');
 
 const subscibeToRoutes = require('./routing/routing.js');

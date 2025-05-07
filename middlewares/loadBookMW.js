@@ -3,7 +3,20 @@
  * @param {object} objRepo
  */
 module.exports = (objRepo) => {
-    return (res, req, next) => {
-        next();
+    const BookModel = objRepo.BookModel;
+    
+    return (req, res, next) => {
+        BookModel.findById(req.params.bookid)
+            .then(book => {
+                if (!book) {
+                    return res.redirect('/');
+                }
+                
+                res.locals.book = book;
+                return next();
+            })
+            .catch(err => {
+                return next(err);
+            });
     }
 }
