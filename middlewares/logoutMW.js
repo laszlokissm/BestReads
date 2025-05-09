@@ -3,7 +3,14 @@
  * @param objRepo
  */
 module.exports = (objRepo) => {
-    return (res, req, next) => {
-        next();
+    return (req, res, next) => {
+        // Destroy the session
+        req.session.destroy(err => {
+            if (err) {
+                return next(err);
+            }
+            // Redirect to login page
+            return res.redirect('/login');
+        });
     }
 }

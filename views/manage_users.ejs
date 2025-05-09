@@ -1,20 +1,55 @@
 <%- include('header')%>
     <main class="container mt-4">
-        <h1>Manage users</h1>
-        <div class="search-bar mb-3 d-flex">
-            <input type="text" class="form-control" placeholder="search">
-            <button class="btn btn-primary ml-2" onclick="window.location.href='add_user.html'">Add user</button>
-        </div>
-        <div class="user-list">
-            <div class="user-item d-flex justify-content-between align-items-center border p-2 mb-2">
-                <span>Username</span>
-                <div class="d-flex justify-content-between align-items-center">
-                    <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input"> Admin
-                    </label>
-                    <button class="btn btn-sm btn-danger ml-3">Delete</button>
-                </div>
+        <h1>Manage Users</h1>
+        <form method="GET" action="/users" class="mb-3">
+            <div class="search-bar d-flex">
+                <input type="text" class="form-control" name="search" placeholder="Search by username, name, or email" value="<%= req.query.search || '' %>">
+                <button type="submit" class="btn btn-primary ml-2" style="height: 38px;">Search</button>
+                <a href="/user/new" class="btn btn-primary ml-2" style="height: 38px; width: 120px;">Add User</a>
+                <% if (req.query.search) { %>
+                    <a href="/users" class="btn btn-secondary ml-2" style="height: 38px;">Clear</a>
+                <% } %>
             </div>
+        </form>
+        <div class="user-list">
+            <% 
+                // Filter users by search term if provided
+                let displayedUsers = users || [];
+                if (req.query.search) {
+                    const searchTerm = req.query.search.toLowerCase();
+                    displayedUsers = displayedUsers.filter(user => 
+                        (user.username && user.username.toLowerCase().includes(searchTerm)) || 
+                        (user.firstName && user.firstName.toLowerCase().includes(searchTerm)) || 
+                        (user.lastName && user.lastName.toLowerCase().includes(searchTerm)) || 
+                        (user.email && user.email.toLowerCase().includes(searchTerm))
+                    );
+                }
+            %>
+            
+            <% if (displayedUsers.length > 0) { %>
+                <% displayedUsers.forEach(user => { %>
+                    <div class="user-item d-flex justify-content-between align-items-center border p-2 mb-2">
+                        <div class="mr-3">
+                            <h5><%= user.username %></h5>
+                            <p class="mb-1"><%= user.firstName %> <%= user.lastName %></p>
+                            <p class="text-muted small"><%= user.email %></p>
+                            <p class="small"><span class="badge badge-<%= user.role === 'admin' ? 'danger' : 'info' %>"><%= user.role %></span></p>
+                        </div>
+                        <div>
+                            <a href="/user/edit/<%= user._id %>" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="/user/del/<%= user._id %>" class="btn btn-sm btn-danger ml-2" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="alert alert-info">
+                    <% if (req.query.search) { %>
+                        No users found matching "<%= req.query.search %>". <a href="/users">View all users</a>
+                    <% } else { %>
+                        No users found.
+                    <% } %>
+                </div>
+            <% } %>
         </div>
     </main>
-<%- include('footer')%>
+    <%- include('footer')%>

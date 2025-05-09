@@ -3,7 +3,21 @@
  * @param {object} objRepo
  */
 module.exports = (objRepo) => {
-    return (res, req, next) => {
-        next();
+    const UserModel = objRepo.UserModel;
+    
+    return (req, res, next) => {
+        UserModel.findById(req.params.userid)
+            .populate('books')
+            .then(user => {
+                if (!user) {
+                    return res.redirect('/users');
+                }
+                
+                res.locals.user = user;
+                return next();
+            })
+            .catch(err => {
+                return next(err);
+            });
     }
 }

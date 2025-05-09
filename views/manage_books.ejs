@@ -1,17 +1,37 @@
 <%- include('header')%>
     <main class="container mt-4">
         <h1>Manage books</h1>
-        <div class="search-bar mb-3 d-flex">
-            <input type="text" class="form-control" placeholder="search">
-            <a href="/book/new" class="btn btn-primary ml-2" style="height: 38px; width: 120px;">Add book</a>
-            <button class="btn btn-secondary ml-2" style="height: 38px;">Order</button>
-        </div>
+        <form method="GET" action="/manage_books" class="mb-3">
+            <div class="search-bar d-flex">
+                <input type="text" class="form-control" name="search" placeholder="Search by title or author" value="<%= req.query.search || '' %>">
+                <button type="submit" class="btn btn-primary ml-2" style="height: 38px;">Search</button>
+                <a href="/book/new" class="btn btn-primary ml-2" style="height: 38px; width: 120px;">Add book</a>
+                <% if (req.query.search) { %>
+                    <a href="/manage_books" class="btn btn-secondary ml-2" style="height: 38px;">Clear</a>
+                <% } %>
+            </div>
+        </form>
         <div class="book-list">
-            <% if (typeof books !== 'undefined' && books.length > 0) { %>
-                <% books.forEach(book => { %>
+            <% 
+                // Filter books by search term if provided
+                let displayedBooks = books || [];
+                if (req.query.search) {
+                    const searchTerm = req.query.search.toLowerCase();
+                    displayedBooks = displayedBooks.filter(book => 
+                        (book.title && book.title.toLowerCase().includes(searchTerm)) || 
+                        (book.author && book.author.toLowerCase().includes(searchTerm))
+                    );
+                }
+            %>
+            
+            <% if (displayedBooks.length > 0) { %>
+                <% displayedBooks.forEach(book => { %>
                     <div class="book-item d-flex justify-content-between align-items-center border p-2 mb-2">
-                        <span class="mr-3"><%= book.title %></span>
-                        <span class="flex-grow-1"><%= book.author %></span>
+                        <div class="mr-3">
+                            <h5><%= book.title %></h5>
+                            <p class="mb-1"><%= book.author %></p>
+                            <p class="text-muted small"><%= book.description ? (book.description.length > 100 ? book.description.substring(0, 100) + '...' : book.description) : 'No description available' %></p>
+                        </div>
                         <div>
                             <a href="/book/edit/<%= book._id %>" class="btn btn-sm btn-warning">Edit</a>
                             <a href="/book/del/<%= book._id %>" class="btn btn-sm btn-danger ml-2" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
@@ -19,7 +39,13 @@
                     </div>
                 <% }); %>
             <% } else { %>
-                <div class="alert alert-info">No books found.</div>
+                <div class="alert alert-info">
+                    <% if (req.query.search) { %>
+                        No books found matching "<%= req.query.search %>". <a href="/manage_books">View all books</a>
+                    <% } else { %>
+                        No books found.
+                    <% } %>
+                </div>
             <% } %>
         </div>
     </main>

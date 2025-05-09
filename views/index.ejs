@@ -3,36 +3,73 @@
         <h1>My Books</h1>
         <div class="row">
             <div class="col-md-3">
-                <ul class="list-group">
-                    <li class="list-group-item">To be read</li>
-                    <li class="list-group-item">Currently reading</li>
-                    <li class="list-group-item">Finished</li>
-                </ul>
-                <button class="btn btn-primary mt-3">Add tag</button>
+                <div class="list-group mb-4">
+                    <a href="/" class="list-group-item list-group-item-action <%= typeof activeTag === 'undefined' ? 'active' : '' %>">
+                        All Books
+                    </a>
+                    <a href="/?tag=To be read" class="list-group-item list-group-item-action <%= activeTag === 'To be read' ? 'active' : '' %>">
+                        To be read
+                    </a>
+                    <a href="/?tag=Currently reading" class="list-group-item list-group-item-action <%= activeTag === 'Currently reading' ? 'active' : '' %>">
+                        Currently reading
+                    </a>
+                    <a href="/?tag=Finished" class="list-group-item list-group-item-action <%= activeTag === 'Finished' ? 'active' : '' %>">
+                        Finished
+                    </a>
+                </div>
             </div>
             <div class="col-md-9">
                 <div class="book-list">
                     <% if (typeof books !== 'undefined' && books.length > 0) { %>
-                        <% books.forEach(book => { %>
+                        <% books.forEach(bookItem => { %>
+                        <% if (bookItem && bookItem.book && bookItem.book._id) { %>
                         <div class="book-item d-flex justify-content-between align-items-center border p-2 mb-2">
                             <div>
-                                <h5><%= book.title %></h5>
-                                <p><%= book.author %></p>
-                                <p>My rating</p>
+                                <h5><a href="/browse/<%= bookItem.book._id %>"><%= bookItem.book.title %></a></h5>
+                                <p><%= bookItem.book.author %></p>
+                                <% if (bookItem.tag) { %>
+                                    <span class="badge badge-info"><%= bookItem.tag %></span>
+                                <% } %>
                             </div>
                             <div>
-                                <button class="btn btn-sm btn-secondary">Add tag</button>
-                                <button class="btn btn-sm btn-warning">Rate</button>
-                                <button class="btn btn-sm btn-info">Review</button>
-                                <button class="btn btn-sm btn-danger">Remove</button>
+                                <div class="dropdown d-inline-block">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="tagDropdown<%= bookItem.book._id %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <%= bookItem.tag || 'Add tag' %>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="tagDropdown<%= bookItem.book._id %>">
+                                        <form action="/book/tag/<%= bookItem.book._id %>" method="POST">
+                                            <button type="submit" name="tag" value="To be read" class="dropdown-item">To be read</button>
+                                            <button type="submit" name="tag" value="Currently reading" class="dropdown-item">Currently reading</button>
+                                            <button type="submit" name="tag" value="Finished" class="dropdown-item">Finished</button>
+                                            <% if (bookItem.tag) { %>
+                                                <div class="dropdown-divider"></div>
+                                                <button type="submit" name="tag" value="" class="dropdown-item text-danger">Remove tag</button>
+                                            <% } %>
+                                        </form>
+                                    </div>
+                                </div>
+                                <a href="/write_review/<%= bookItem.book._id %>" class="btn btn-sm btn-info">Review</a>
+                                <a href="/book/remove/<%= bookItem.book._id %>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to remove this book from your collection?')">Remove</a>
                             </div>
                         </div>
+                        <% } %>
                         <% }); %>
                     <% } else { %>
-                        <div class="alert alert-info">No books found.</div>
+                        <div class="alert alert-info">
+                            <% if (typeof activeTag !== 'undefined') { %>
+                                <p>You don't have any books tagged as "<%= activeTag %>".</p>
+                                <a href="/" class="btn btn-primary">View All Books</a>
+                            <% } else { %>
+                                <p>You haven't added any books to your collection yet.</p>
+                                <a href="/browse" class="btn btn-primary">Browse Books</a>
+                            <% } %>
+                        </div>
                     <% } %>
                 </div>
             </div>
         </div>
     </main>
 <%- include('footer')%>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>

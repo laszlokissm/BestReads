@@ -1,31 +1,38 @@
 <%- include('header')%>
     <div class="container mt-5">
-        <h2 class="text-center">Add User</h2>
-        <form>
+        <h2 class="text-center"><%= typeof user !== 'undefined' ? 'Edit User' : 'Add User' %></h2>
+        <form action="<%= typeof user !== 'undefined' ? `/user/edit/${user._id}` : '/user/new' %>" method="POST">
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="firstName">Your first name</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="Your first name">
+                    <label for="firstName">First name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" value="<%= typeof user !== 'undefined' ? user.firstName : '' %>" placeholder="First name" required>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="lastName">Your last name</label>
-                    <input type="text" class="form-control" id="lastName" placeholder="Your last name">
+                    <label for="lastName">Last name</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" value="<%= typeof user !== 'undefined' ? user.lastName : '' %>" placeholder="Last name" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Username">
+                <input type="text" class="form-control" id="username" name="username" value="<%= typeof user !== 'undefined' ? user.username : '' %>" placeholder="Username" required>
             </div>
             <div class="form-group">
-                <label for="email">Your email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Your email address">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= typeof user !== 'undefined' ? user.email : '' %>" placeholder="Email address" required>
             </div>
             <div class="form-group">
-                <label for="password">Pick a password</label>
-                <input type="password" class="form-control" id="password" placeholder="Pick a password">
+                <label for="password">Password <%= typeof user !== 'undefined' ? '(leave empty to keep current)' : '' %></label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="<%= typeof user !== 'undefined' ? 'Enter new password or leave empty' : 'Password' %>" <%= typeof user === 'undefined' ? 'required' : '' %>>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Add User</button>
-            <button type="button" class="btn btn-link btn-block" onclick="window.location.href='manage_users.html'">Cancel</button>
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select class="form-control" id="role" name="role">
+                    <option value="user" <%= typeof user !== 'undefined' && user.role === 'user' ? 'selected' : '' %>>User</option>
+                    <option value="admin" <%= typeof user !== 'undefined' && user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block"><%= typeof user !== 'undefined' ? 'Update User' : 'Add User' %></button>
+            <a href="/users" class="btn btn-secondary btn-block">Cancel</a>
         </form>
     </div>
     <%- include('footer')%>

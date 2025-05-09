@@ -5,7 +5,9 @@
  */
 module.exports = (objRepo, view) => {
     return (req, res, next) => {
-        //next();
-        return res.render(view,res.locals);
+        // Make req available to templates
+        res.locals.req = req;
+        
+        return res.render(view, res.locals);
     }
 }

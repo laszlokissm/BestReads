@@ -8,3 +8,5 @@ const Review = db.model('Review', {
     rating: Number,
     createdAt: { type: Date, default: Date.now },
 });
+
+module.exports = Review;

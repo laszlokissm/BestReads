@@ -7,6 +7,13 @@ module.exports = (objRepo) => {
     
     return (req, res, next) => {
         BookModel.findById(req.params.bookid)
+            .populate({
+                path: '_reviews',
+                populate: {
+                    path: 'user',
+                    select: 'username'
+                }
+            })
             .then(book => {
                 if (!book) {
                     return res.redirect('/');

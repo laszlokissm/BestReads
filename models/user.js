@@ -7,7 +7,10 @@ const User = db.model('User', {
     email: String,
     firstName: String,
     lastName: String,
-    books: [{ type: Schema.Types.ObjectId, ref: 'Book' }],
+    books: [{
+        book: { type: Schema.Types.ObjectId, ref: 'Book' },
+        tag: { type: String, enum: ['To be read', 'Currently reading', 'Finished'], default: null }
+    }],
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
 });
 

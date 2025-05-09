@@ -22,6 +22,7 @@ module.exports = (objRepo) => {
 
         book.title = req.body.title;
         book.author = req.body.author;
+        book.description = req.body.description || '';
         book.ReleaseDate = new Date(req.body.ReleaseDate);
         book.PageCount = parseInt(req.body.PageCount);
         book.WordCount = parseInt(req.body.WordCount);

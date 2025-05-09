@@ -5,6 +5,7 @@ const Book = db.model('Book', {
     _id: { type: Schema.Types.ObjectId, auto: true },
     title: String,
     author: String,
+    description: String,
     ReleaseDate: Date,
     PageCount: Number,
     WordCount: Number,
