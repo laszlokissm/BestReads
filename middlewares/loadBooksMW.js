@@ -4,7 +4,16 @@
  * @returns {function(*, *, *): *} 
  */
 module.exports = (objRepo) => {
-    return (res, req, next) => {
-        next();
+    const BookModel = objRepo.BookModel;
+
+    return (req, res, next) => {
+        return BookModel.find({}).then((books) => {
+            res.locals.books = books;
+            next();
+        }
+        ).catch((err) => {
+            //console.log(err);
+            return next(err);
+        });
     }
 }

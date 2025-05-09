@@ -1,0 +1,84 @@
+<%- include('header')%>
+    <main class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <img src="https://picsum.photos/200/300" alt="<%= book.title %> Cover" class="img-fluid">
+            </div>
+            <div class="col-md-9">
+                <h1><%= book.title %></h1>
+                <h2><%= book.author %></h2>
+                <p>Published: <%= book.ReleaseDate ? book.ReleaseDate.getFullYear() : 'Unknown' %> | 
+                   Pages: <%= book.PageCount || 'Unknown' %> | 
+                   Words: <%= book.WordCount ? book.WordCount.toLocaleString() : 'Unknown' %></p>
+                <div class="book-description mb-4">
+                    <h4>Description</h4>
+                    <p><%= book.description || 'No description available for this book.' %></p>
+                </div>
+                <a href="/book/add/<%= book._id %>" class="btn btn-primary mb-3">Add to my books</a>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-start align-items-center">
+                    <h3>Reviews</h3>
+                    
+                    <% 
+                    // Check if the user has already reviewed this book to disable the Write Review button
+                    let userHasReviewed = false;
+                    if (book._reviews && book._reviews.length > 0 && req.session && req.session.userId) {
+                        userHasReviewed = book._reviews.some(review => 
+                            review.user && review.user._id && review.user._id.toString() === req.session.userId
+                        );
+                    }
+                    %>
+                    
+                    <% if (userHasReviewed) { %>
+                        <button class="btn btn-secondary ml-3" disabled title="You have already reviewed this book">Write review</button>
+                    <% } else { %>
+                        <button class="btn btn-primary ml-3" onclick="location.href='/write_review/<%= book._id %>'">Write review</button>
+                    <% } %>
+                    
+                    <p class="mb-0 ml-3">Average rating: 
+                        <% 
+                        let avgRating = 0;
+                        let avgRatingPrecise = 0;
+                        if (book._reviews && book._reviews.length > 0) {
+                            const totalRating = book._reviews.reduce((acc, review) => acc + review.rating, 0);
+                            avgRatingPrecise = (totalRating / book._reviews.length).toFixed(1);
+                            avgRating = Math.round(totalRating / book._reviews.length);
+                        }
+                        for (let i = 1; i <= 5; i++) { 
+                        %>
+                            <span class="fa fa-star <%= i <= avgRating ? 'text-warning' : 'text-secondary' %>"></span>
+                        <% } %>
+                        <strong class="ml-1"><%= avgRatingPrecise %>/5</strong> 
+                        (<%= book._reviews ? book._reviews.length : 0 %> <%= book._reviews && book._reviews.length === 1 ? 'review' : 'reviews' %>)
+                    </p>
+                </div>
+                <% if (book._reviews && book._reviews.length > 0) { %>
+                    <% book._reviews.forEach(review => { %>
+                        <div class="review mb-3 p-3 border rounded">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h4><%= review.user ? review.user.username : 'Anonymous' %></h4>
+                                <% if (req.session && req.session.userId && review.user && review.user._id && review.user._id.toString() === req.session.userId) { %>
+                                    <a href="/review/delete/<%= review._id %>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete your review?')">Delete</a>
+                                <% } %>
+                            </div>
+                            <p><%= review.review_text %></p>
+                            <p>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <span class="fa fa-star <%= i <= review.rating ? 'text-warning' : 'text-secondary' %>"></span>
+                                <% } %>
+                            </p>
+                            <small class="text-muted">
+                                <%= review.createdAt ? new Date(review.createdAt).toLocaleDateString() : 'Unknown date' %>
+                            </small>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="alert alert-info mt-3">No reviews yet. Be the first to write a review!</div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+<%- include('footer')%>

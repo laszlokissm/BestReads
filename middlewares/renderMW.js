@@ -4,8 +4,10 @@
  * @param view
  */
 module.exports = (objRepo, view) => {
-    return (res, req, next) => {
-        //next();
-        return res.render(view,{});
+    return (req, res, next) => {
+        // Make req available to templates
+        res.locals.req = req;
+        
+        return res.render(view, res.locals);
     }
 }

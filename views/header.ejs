@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BestReads</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="/">BestReads</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mr-auto">
+                        <% if (req.session && req.session.loggedIn) { %>
+                            <li class="nav-item"><a class="nav-link" href="/">My Books</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/browse">Browse</a></li>
+                            <% if (req.session.role === 'admin') { %>
+                                <li class="nav-item"><a class="nav-link" href="/manage_books">Manage Books</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/users">Manage Users</a></li>
+                            <% } %>
+                        <% } %>
+                    </ul>
+                    <div class="navbar-nav">
+                        <% if (req.session && req.session.loggedIn) { %>
+                            <span class="nav-link mr-3">Hello, <%= req.session.username %></span>
+                            <a class="nav-link" href="/logout">Logout</a>
+                        <% } else { %>
+                            <a class="nav-link" href="/login">Login</a>
+                            <a class="nav-link" href="/register">Register</a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>

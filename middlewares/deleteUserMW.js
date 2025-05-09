@@ -3,7 +3,11 @@
  * @param {object} objRepo
  */
 module.exports = (objRepo) => {
-    return (res, req, next) => {
-        next();
+    return (req, res, next) => {
+        return res.locals.user.deleteOne().then(() => {
+            return res.redirect('/users');
+        }).catch((err) => {
+            return next(err);
+        });
     }
 }
