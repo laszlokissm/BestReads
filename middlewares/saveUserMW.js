@@ -15,12 +15,9 @@ module.exports = (objRepo) => {
 
         let user;
         if (typeof res.locals.user !== 'undefined') {
-            // Edit existing user
             user = res.locals.user;
         } else {
-            // Create new user
             user = new UserModel();
-            // For new users, password is required
             if (typeof req.body.password === 'undefined' || req.body.password.trim() === '') {
                 return next();
             }
@@ -32,12 +29,10 @@ module.exports = (objRepo) => {
         user.firstName = req.body.firstName;
         user.lastName = req.body.lastName;
         
-        // Only update password if provided on edit
         if (res.locals.user !== undefined && req.body.password && req.body.password.trim() !== '') {
             user.password = req.body.password;
         }
         
-        // Set role if provided, default to 'user'
         user.role = req.body.role || 'user';
 
         return user.save().then(() => {

@@ -13,7 +13,6 @@
         </form>
         <div class="user-list">
             <% 
-                // Filter users by search term if provided
                 let displayedUsers = users || [];
                 if (req.query.search) {
                     const searchTerm = req.query.search.toLowerCase();

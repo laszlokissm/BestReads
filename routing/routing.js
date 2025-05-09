@@ -20,35 +20,31 @@ const addBookToUserMW = require('../middlewares/addBookToUserMW');
 const removeBookFromUserMW = require('../middlewares/removeBookFromUserMW');
 const updateBookTagMW = require('../middlewares/updateBookTagMW');
 
-// Import models
 const BookModel = require('../models/book');
 const ReviewModel = require('../models/review');
 const UserModel = require('../models/user');
 
-//desgin
 function subscibeToRoutes(app) {
     const objRepo = {
         BookModel: BookModel,
         ReviewModel: ReviewModel,
         UserModel: UserModel
     };
+
     // / oldalon a userhez tartozo konyvek listazasa
     app.get('/', authMW(objRepo), loadUserBooksMW(objRepo), renderMW(objRepo,'index'));
 
-    // ezek az admin felulethez tartozo manage books 
+
+    // manage books
     app.use('/book/new', authMW(objRepo), saveBookMW(objRepo), renderMW(objRepo,'edit_book'));
-    //app.post('/book/new', authMW(objRepo), saveBookMW(objRepo));
     app.use('/book/edit/:bookid', authMW(objRepo), loadBookMW(objRepo), saveBookMW(objRepo), renderMW(objRepo,'edit_book'));
-    //app.post('/book/edit/:bookid', authMW(objRepo), saveBookMW(objRepo));
     app.get('/book/del/:bookid', authMW(objRepo), loadBookMW(objRepo), deleteBookMW(objRepo));
     app.get('/manage_books', authMW(objRepo), loadBooksMW(objRepo), renderMW(objRepo,'manage_books'));
 
     // manage users
     app.get('/users', authMW(objRepo), loadUsersMW(objRepo), renderMW(objRepo,'manage_users'));
     app.use('/user/new', authMW(objRepo), saveUserMW(objRepo), renderMW(objRepo,'add_user'));
-    //app.post('/user/new', authMW(objRepo), saveUserMW(objRepo));
     app.use('/user/edit/:userid', authMW(objRepo), loadUserMW(objRepo), saveUserMW(objRepo), renderMW(objRepo,'add_user'));
-    //app.post('/user/edit/:userid', authMW(objRepo), saveUserMW(objRepo));
     app.get('/user/del/:userid', authMW(objRepo), loadUserMW(objRepo), deleteUserMW(objRepo));
 
     // book browse
