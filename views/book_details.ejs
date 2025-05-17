@@ -23,7 +23,6 @@
                     <h3>Reviews</h3>
                     
                     <% 
-                    // Check if the user has already reviewed this book to disable the Write Review button
                     let userHasReviewed = false;
                     if (book._reviews && book._reviews.length > 0 && req.session && req.session.userId) {
                         userHasReviewed = book._reviews.some(review => 

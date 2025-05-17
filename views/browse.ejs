@@ -12,7 +12,6 @@
         </form>
         <div class="book-list">
             <% 
-                // Filter books by search term if provided
                 let displayedBooks = books || [];
                 if (req.query.search) {
                     const searchTerm = req.query.search.toLowerCase();
